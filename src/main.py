@@ -10,24 +10,42 @@ import os
 
 #Логин
 USER_LOGIN = 'aiyumrin@gmail.com'
-#файл с паролем
-with open('C:\doc.txt') as f:
+
+#Название файла cookies
+COOKIES_PATH = '\lincookies'
+
+#Папка для хранения пароля и cookies
+FILES_PATH = 'D:\Recruiters'
+
+#Проверки
+if not os.path.exists(FILES_PATH):
+    os.mkdir(FILES_PATH)
+
+if not os.path.exists(FILES_PATH + '\doc.txt'):
+    f = open(FILES_PATH + '\doc.txt', 'w+')
+    f.write(str(input('Введите пароль')))
+    f.close()
+
+#Получение пароля из файла
+with open(FILES_PATH + '\doc.txt') as f:
     USER_PASSWORD = f.readline()
-COOKIES_PATH = 'lincookies'
 
 if __name__ == '__main__':
     caps = DesiredCapabilities().CHROME
     caps['pageLoadStrategy'] = 'eager'
     driver = webdriver.Chrome()
 
-    if os.path.exists(COOKIES_PATH):
+    #Авторизация по cookie
+    if os.path.exists(FILES_PATH + COOKIES_PATH):
         driver.get('https://linkedin.com')
         #Загрузка куки
-        for cookie in pickle.load(open('D:\lincookies', 'rb')):
+        for cookie in pickle.load(open(FILES_PATH + COOKIES_PATH, 'rb')):
             driver.add_cookie(cookie)
         time.sleep(5)
         driver.refresh()
         time.sleep(10)
+
+    #Вход по паролю и сохранение cookie
     else:
         driver.get('https://linkedin.com/uas/login')
         #Авторизация
@@ -37,9 +55,8 @@ if __name__ == '__main__':
         pword = driver.find_element(By.ID, "password")
         pword.send_keys(USER_PASSWORD)
         driver.find_element(By.XPATH, "//button[@type='submit']").click()
-        time.sleep(30) #время на ввод кода подтверждения
-        #Сохранение куки
-        pickle.dump(driver.get_cookies(), open('D:\lincookies', 'wb'))
+        time.sleep(30) #время на ввод кода подтверждения если понадобится
+        pickle.dump(driver.get_cookies(), open(FILES_PATH + COOKIES_PATH, 'wb'))
 
     driver.get('https://www.linkedin.com/search/results/people/?keywords=data%20scientist&origin=CLUSTER_EXPANSION&sid=1gy')
 
