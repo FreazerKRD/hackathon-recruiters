@@ -14,28 +14,21 @@ USER_LOGIN = 'aiyumrin@gmail.com'
 #Название файла cookies
 COOKIES_PATH = '\lincookies'
 
-#Папка для хранения пароля и cookies
+#Папка для хранения cookies
 FILES_PATH = 'D:\Recruiters'
 
-#Проверки
+#Проверка наличия папки для cookies
 if not os.path.exists(FILES_PATH):
     os.mkdir(FILES_PATH)
 
-if not os.path.exists(FILES_PATH + '\doc.txt'):
-    f = open(FILES_PATH + '\doc.txt', 'w+')
-    f.write(str(input('Введите пароль')))
-    f.close()
 
-#Получение пароля из файла
-with open(FILES_PATH + '\doc.txt') as f:
-    USER_PASSWORD = f.readline()
 
 if __name__ == '__main__':
     caps = DesiredCapabilities().CHROME
     caps['pageLoadStrategy'] = 'eager'
     driver = webdriver.Chrome()
 
-    #Авторизация по cookie
+    #Авторизация по cookies
     if os.path.exists(FILES_PATH + COOKIES_PATH):
         driver.get('https://linkedin.com')
         #Загрузка куки
@@ -45,7 +38,7 @@ if __name__ == '__main__':
         driver.refresh()
         time.sleep(10)
 
-    #Вход по паролю и сохранение cookie
+    #Вход по паролю и сохранение cookies
     else:
         driver.get('https://linkedin.com/uas/login')
         #Авторизация
@@ -53,9 +46,9 @@ if __name__ == '__main__':
         username = driver.find_element(By.ID, "username")
         username.send_keys(USER_LOGIN)
         pword = driver.find_element(By.ID, "password")
-        pword.send_keys(USER_PASSWORD)
+        pword.send_keys(str(input('Введите пароль: ')))
         driver.find_element(By.XPATH, "//button[@type='submit']").click()
-        time.sleep(30) #время на ввод кода подтверждения если понадобится
+        time.sleep(10) #время на ввод кода подтверждения если понадобится
         pickle.dump(driver.get_cookies(), open(FILES_PATH + COOKIES_PATH, 'wb'))
 
     driver.get('https://www.linkedin.com/search/results/people/?keywords=data%20scientist&origin=CLUSTER_EXPANSION&sid=1gy')
