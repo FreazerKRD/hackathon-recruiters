@@ -28,6 +28,7 @@ if __name__ == '__main__':
     caps['pageLoadStrategy'] = 'eager'
     driver = webdriver.Chrome()
 
+
     #Авторизация по cookies
     if os.path.exists(FILES_PATH + COOKIES_PATH):
         driver.get('https://linkedin.com')
@@ -36,7 +37,7 @@ if __name__ == '__main__':
             driver.add_cookie(cookie)
         time.sleep(5)
         driver.refresh()
-        time.sleep(10)
+        time.sleep(3)
 
     #Вход по паролю и сохранение cookies
     else:
@@ -54,20 +55,34 @@ if __name__ == '__main__':
     driver.get('https://www.linkedin.com/search/results/people/?keywords=data%20scientist&origin=CLUSTER_EXPANSION&sid=1gy')
 
     time.sleep(10)
-""""
+
     profile_urls = []
 
-    NUM_PAGES_TO_PARSE = 12
+    NUM_PAGES_TO_PARSE = 100
 
     for i in range(NUM_PAGES_TO_PARSE):
-        search_result_links = driver.find_elements(By.CSS_SELECTOR, "div.entity-result__item a.app-aware-link")
+        search_result_links = driver.find_elements(By.CSS_SELECTOR, "span.entity-result__title-text a.app-aware-link")
 
         for link in search_result_links:
             href = link.get_attribute("href")
             if 'linkedin.com/in' in href:
                 profile_urls.append(href)
 
-        next_button = driver.find_element(By.CLASS_NAME,'artdeco-pagination__button--next')
+        time.sleep(2)
+
+        SCROLL_PAUSE_TIME = 1.5
+        last_height = driver.execute_script("return document.body.scrollHeight")
+        NUM_SCROLLS = 5
+
+        for i in range(NUM_SCROLLS):
+            driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+            time.sleep(SCROLL_PAUSE_TIME)
+            new_height = driver.execute_script("return document.body.scrollHeight")
+            if new_height == last_height:
+                break
+            last_height = new_height
+
+        next_button = driver.find_element(By.CSS_SELECTOR, 'button.artdeco-pagination__button--next')
         next_button.click()
         time.sleep(2)
 
@@ -77,8 +92,7 @@ if __name__ == '__main__':
     print(profile_urls)
 
     for profile_url in profile_urls:
-        get_and_print_profile_info(driver, profile_url)
+        #get_and_print_profile_info(driver, profile_url)
         time.sleep(2)
 
     driver.quit()
-"""
