@@ -7,6 +7,7 @@ import time
 import re
 import pickle
 import os
+import random
 
 #Логин
 USER_LOGIN = 'aiyumrin@gmail.com'
@@ -35,15 +36,15 @@ if __name__ == '__main__':
         #Загрузка куки
         for cookie in pickle.load(open(FILES_PATH + COOKIES_PATH, 'rb')):
             driver.add_cookie(cookie)
-        time.sleep(5)
+        time.sleep(random.uniform(.5, 2))
         driver.refresh()
-        time.sleep(3)
+        time.sleep(random.uniform(.5, 2))
 
     #Вход по паролю и сохранение cookies
     else:
         driver.get('https://linkedin.com/uas/login')
         #Авторизация
-        time.sleep(3.5)
+        time.sleep(random.uniform(2, 4))
         username = driver.find_element(By.ID, "username")
         username.send_keys(USER_LOGIN)
         pword = driver.find_element(By.ID, "password")
@@ -52,15 +53,17 @@ if __name__ == '__main__':
         time.sleep(10) #время на ввод кода подтверждения если понадобится
         pickle.dump(driver.get_cookies(), open(FILES_PATH + COOKIES_PATH, 'wb'))
 
+    #Загрузка страницы с результатами поиска
     driver.get('https://www.linkedin.com/search/results/people/?keywords=data%20scientist&origin=CLUSTER_EXPANSION&sid=1gy')
-
-    time.sleep(10)
+    time.sleep(random.uniform(.5, 3))
 
     profile_urls = []
-
     NUM_PAGES_TO_PARSE = 100
 
     for i in range(NUM_PAGES_TO_PARSE):
+
+        print('Page', i+1)
+
         search_result_links = driver.find_elements(By.CSS_SELECTOR, "span.entity-result__title-text a.app-aware-link")
 
         for link in search_result_links:
@@ -68,31 +71,43 @@ if __name__ == '__main__':
             if 'linkedin.com/in' in href:
                 profile_urls.append(href)
 
-        time.sleep(2)
-
-        SCROLL_PAUSE_TIME = 1.5
         last_height = driver.execute_script("return document.body.scrollHeight")
-        NUM_SCROLLS = 5
+        NUM_SCROLLS = 10
 
-        for i in range(NUM_SCROLLS):
+        for j in range(NUM_SCROLLS):
             driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
-            time.sleep(SCROLL_PAUSE_TIME)
+            time.sleep(random.uniform(1.5, 3))
             new_height = driver.execute_script("return document.body.scrollHeight")
             if new_height == last_height:
                 break
             last_height = new_height
 
-        next_button = driver.find_element(By.CSS_SELECTOR, 'button.artdeco-pagination__button--next')
-        next_button.click()
-        time.sleep(2)
+        time.sleep(random.uniform(1, 2))
+                
+        print('Sucsess!')
+        print('-' * 50)
+
+        k = 1
+        errors = 0
+        while k == 1 and errors < 10:
+            try:
+                next_button = driver.find_element(By.CSS_SELECTOR, 'button.artdeco-pagination__button--next')
+                next_button.click()
+                k = 2
+            except: 
+                print(f'ERROR on page {i+1}! {errors}')
+                errors += 1
+
+        time.sleep(random.uniform(.5, 1))
 
 
     profile_urls = list(set(profile_urls))
+    print('Done!')
 
     print(profile_urls)
 
-    for profile_url in profile_urls:
-        #get_and_print_profile_info(driver, profile_url)
-        time.sleep(2)
+    # for profile_url in profile_urls:
+    #     #get_and_print_profile_info(driver, profile_url)
+    #     time.sleep(2)
 
-    driver.quit()
+    # driver.quit()
