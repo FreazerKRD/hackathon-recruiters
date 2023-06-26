@@ -1,12 +1,28 @@
-import pandas as pd
+from bs4 import BeautifulSoup
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
+
 import time
+import re
+import pickle
+import os
+import random
+import pandas as pd
+
 from functions import auth
+
+import pandas as pd
 
 driver = auth()
 driver.get('https://www.linkedin.com/search/results/people/?keywords=data%20scientist&origin=CLUSTER_EXPANSION&sid=1gy')
 time.sleep(20)
 urls = pd.read_csv('profile_urls.csv')
 print(urls)
+
+for url in urls['profile_url']:
+    driver.get(url)
+    time.sleep(random.uniform(20, 30))
 
 '''
 from bs4 import BeautifulSoup
