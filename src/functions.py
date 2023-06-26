@@ -1,29 +1,52 @@
-from bs4 import BeautifulSoup
-import time
+def auth():
+      import os
+      from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
+      from selenium import webdriver
+      import pickle
+      import time
+      import random
+      from selenium.webdriver.common.by import By
 
-def get_and_print_profile_info(driver, profile_url):
-    driver.get(profile_url)
 
-    src = driver.page_source
+      #if __name__ == '__main__':
 
-    soup = BeautifulSoup(src, 'lxml')
+      #Логин
+      USER_LOGIN = 'aiyumrin@gmail.com'
 
-    intro = soup.find('div', {'class': 'pv-text-details__left-panel'})
+      #Название файла cookies
+      COOKIES_PATH = '\lincookies'
 
-    name_loc = intro.find("h1")
+      #Папка для хранения cookies
+      FILES_PATH = 'D:\Recruiters'
 
-    name = name_loc.get_text().strip()
+      #Проверка наличия папки для cookies
+      if not os.path.exists(FILES_PATH):
+            os.mkdir(FILES_PATH)
 
-    works_at_loc = intro.find("div", {'class': 'text-body-medium'})
+      caps = DesiredCapabilities().CHROME
+      caps['pageLoadStrategy'] = 'eager'
+      driver = webdriver.Chrome()
 
-    works_at = works_at_loc.get_text().strip()
+      #Авторизация по cookies
+      if os.path.exists(FILES_PATH + COOKIES_PATH):
+            driver.get('https://linkedin.com')
+            #Загрузка куки
+            for cookie in pickle.load(open(FILES_PATH + COOKIES_PATH, 'rb')):
+                  driver.add_cookie(cookie)
+            time.sleep(random.uniform(.5, 2))
+            driver.refresh()
+            time.sleep(random.uniform(.5, 2))
 
-    print("Name -->",  name,
-          "\nWorks At -->", works_at)
-
-    POSTS_URL_SUFFIX = 'recent-activity/all/'
-
-    time.sleep(0.5)
-
-    cur_profile_url = driver.current_url
-    print(cur_profile_url)
+      #Вход по паролю и сохранение cookies
+      else:
+            driver.get('https://linkedin.com/uas/login')
+            #Авторизация
+            time.sleep(random.uniform(2, 4))
+            username = driver.find_element(By.ID, "username")
+            username.send_keys(USER_LOGIN)
+            pword = driver.find_element(By.ID, "password")
+            pword.send_keys(str(input('Введите пароль: ')))
+            driver.find_element(By.XPATH, "//button[@type='submit']").click()
+            time.sleep(10) #время на ввод кода подтверждения если понадобится
+            pickle.dump(driver.get_cookies(), open(FILES_PATH + COOKIES_PATH, 'wb'))
+      return driver
