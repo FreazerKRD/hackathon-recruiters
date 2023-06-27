@@ -25,7 +25,7 @@ SEARCH_URL = 'https://www.linkedin.com/search/results/people/?keywords=data%20sc
 auth(driver)
 time.sleep(random.uniform(.5, 1))
 #Вызов функции сбора url
-#profile_urls(driver, SEARCH_URL)
+profile_urls(driver, SEARCH_URL)
 time.sleep(random.uniform(.5, 1))
 
 urls = pd.read_csv('profile_urls.csv')['profile_url']
