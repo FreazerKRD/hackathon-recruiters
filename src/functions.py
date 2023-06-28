@@ -321,7 +321,9 @@ def search_pages(driver, num_pages, info_file_name, posts_file_name):
                         profile_urls.append(href)
                   
             profile_urls = pd.Series(profile_urls)
-            profile_urls_cut = profile_urls.str.split('?', n=1).str[0]
+            try:
+                  profile_urls_cut = profile_urls.str.split('?', n=1).str[0]
+            except: pass
             
             time.sleep(random.uniform(2, 5))
             
