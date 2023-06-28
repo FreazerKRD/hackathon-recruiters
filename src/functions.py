@@ -15,10 +15,10 @@ def auth(driver):
       #if __name__ == '__main__':
 
       #Логин
-      USER_LOGIN = 'aiyumrin@gmail.com'
+      USER_LOGIN = 'fedorfedukov79@gmail.com'
 
       #Название файла cookies
-      COOKIES_PATH = '\lincookies'
+      COOKIES_PATH = '\lincookies' + str(USER_LOGIN.split('@')[0])
 
       #Папка для хранения cookies
       FILES_PATH = 'D:\Recruiters'
@@ -47,7 +47,7 @@ def auth(driver):
             pword = driver.find_element(By.ID, "password")
             pword.send_keys(str(input('Введите пароль: ')))
             driver.find_element(By.XPATH, "//button[@type='submit']").click()
-            time.sleep(10) #время на ввод кода подтверждения если понадобится
+            time.sleep(30) #время на ввод кода подтверждения если понадобится
             pickle.dump(driver.get_cookies(), open(FILES_PATH + COOKIES_PATH, 'wb'))
 
 def profile_urls(driver, search_url):
