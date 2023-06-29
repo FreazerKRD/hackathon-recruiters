@@ -1,18 +1,7 @@
-from bs4 import BeautifulSoup
 from selenium import webdriver
-from selenium.webdriver.common.by import By
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
-from selenium.common.exceptions import NoSuchElementException
-
 import time
-import re
-import pickle
-import os
 import random
-import pandas as pd
-
-import csv
-
 import functions
 
 #Ссылка на поиск
