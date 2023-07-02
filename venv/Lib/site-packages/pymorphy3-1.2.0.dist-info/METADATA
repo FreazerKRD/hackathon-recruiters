@@ -1,0 +1,40 @@
+Metadata-Version: 2.1
+Name: pymorphy3
+Version: 1.2.0
+Summary: Morphological analyzer (POS tagger + inflection engine) for Russian language.
+Home-page: https://github.com/no-plagiarism/pymorphy3
+Author: Danylo Halaiko
+Author-email: d9nich@pm.me
+License: MIT license
+Classifier: Development Status :: 4 - Beta
+Classifier: Intended Audience :: Developers
+Classifier: Intended Audience :: Science/Research
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Natural Language :: Russian
+Classifier: Programming Language :: Python
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.5
+Classifier: Programming Language :: Python :: 3.6
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: Implementation :: CPython
+Classifier: Programming Language :: Python :: Implementation :: PyPy
+Classifier: Topic :: Software Development :: Libraries :: Python Modules
+Classifier: Topic :: Scientific/Engineering :: Information Analysis
+Classifier: Topic :: Text Processing :: Linguistic
+License-File: LICENSE.txt
+License-File: AUTHORS.rst
+Requires-Dist: dawg-python (>=0.7.1)
+Requires-Dist: docopt (>=0.6)
+Requires-Dist: pymorphy3-dicts-ru
+Provides-Extra: fast
+Requires-Dist: DAWG (>=0.8) ; extra == 'fast'
+
+pymorphy3
+=========
+
+Morphological analyzer (POS tagger + inflection engine)
+for Russian and Ukrainian languages.
+
+## Links
+Repo is fork of [Mikhail Korobov](https://github.com/kmike/pymorphy2) and follows all rules of MIT license.
